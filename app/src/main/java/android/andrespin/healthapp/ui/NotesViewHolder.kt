@@ -1,38 +1,18 @@
 package android.andrespin.healthapp.ui
 
 
-
-
 class NotesViewHolder {
-
 
 
 }
 
 /*
-class DictionaryAdapter : RecyclerView.Adapter<DictionaryViewHolder>() {
+class DictionaryViewHolder(private val vb: DictionaryFragmentRecyclerviewItemBinding) :
+    RecyclerView.ViewHolder(vb.root) {
 
-    private var data: List<WordDescription> = arrayListOf()
-
-    fun setData(data: List<WordDescription>) {
-        this.data = data
-        notifyDataSetChanged()
+    fun bind(response: WordDescription) {
+        vb.txtItemPartOfSpeech.text = response.partOfSpeech
+        vb.txtItemWordTranslation.text = response.wordTranslationsOneLine
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DictionaryViewHolder =
-        DictionaryViewHolder(
-            DictionaryFragmentRecyclerviewItemBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
-    override fun onBindViewHolder(holder: DictionaryViewHolder, position: Int) {
-        holder.bind(data[position])
-    }
-
-    override fun getItemCount(): Int = data.size
-
 }
  */

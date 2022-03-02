@@ -41,13 +41,12 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="MainFragment"
+        android:id="@+id/rv_date"
+        android:layout_width="416dp"
+        android:layout_height="673dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
