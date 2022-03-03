@@ -1,4 +1,4 @@
-package android.andrespin.healthapp.ui
+package android.andrespin.healthapp.ui.adapter
 
 import android.andrespin.healthapp.databinding.ItemRvNoteDateBinding
 import android.andrespin.healthapp.model.DayNotes

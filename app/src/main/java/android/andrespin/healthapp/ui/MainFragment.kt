@@ -1,9 +1,12 @@
-package android.andrespin.healthapp
+package android.andrespin.healthapp.ui
 
+import android.andrespin.healthapp.EventState
+import android.andrespin.healthapp.MainIntent
+import android.andrespin.healthapp.MainState
+import android.andrespin.healthapp.R
 import android.andrespin.healthapp.databinding.MainFragmentBinding
-import android.andrespin.healthapp.ui.DatesAdapter
-import android.andrespin.healthapp.model.DayNotes
 import android.andrespin.healthapp.model.NoteData
+import android.andrespin.healthapp.ui.adapter.DatesAdapter
 import android.andrespin.healthapp.viewmodel.MainViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -12,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -21,10 +25,6 @@ class MainFragment : Fragment() {
     private lateinit var binding: MainFragmentBinding
 
     private val adapter: DatesAdapter by lazy { DatesAdapter(requireContext()) }
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
 
     private lateinit var viewModel: MainViewModel
 
@@ -43,6 +43,18 @@ class MainFragment : Fragment() {
         initAdapter()
         initToolBar()
         observeViewModel()
+
+        val navController = findNavController()
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<NoteData>("key")
+            ?.observe(
+                viewLifecycleOwner
+            ) {
+                println("data of note $it")
+                lifecycleScope.launch {
+                    viewModel.intent.send(MainIntent.SaveData(it))
+                }
+            }
+
     }
 
     private fun initAdapter() {
@@ -54,7 +66,10 @@ class MainFragment : Fragment() {
         binding.mainToolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.menuAdd -> {
-                    // adapter.setData(list)
+                    findNavController().navigate(R.id.action_notes_to_dialogAddNote)
+                    true
+                }
+                R.id.menuSample -> {
                     lifecycleScope.launch {
                         viewModel.intent.send(MainIntent.AddNote)
                     }
@@ -68,7 +83,6 @@ class MainFragment : Fragment() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             viewModel.state.collect {
-
                 when (it) {
                     is MainState.Idle -> {
                     }
@@ -81,11 +95,24 @@ class MainFragment : Fragment() {
                     is MainState.Error -> {
                         renderError(it)
                     }
-
                 }
 
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.eventState.collect {
+                when (it) {
+                    is EventState.Idle -> {
+                    }
+                    is EventState.OpenDialog -> {
+                        findNavController().navigate(R.id.action_notes_to_dialogAddNote)
+                    }
+                }
+
+            }
+        }
+
     }
 
     private fun renderError(it: MainState.Error) {
@@ -99,6 +126,5 @@ class MainFragment : Fragment() {
     private fun renderLoading() {
 
     }
-
 
 }

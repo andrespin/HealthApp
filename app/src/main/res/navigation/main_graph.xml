@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    app:startDestination="@id/notes">
+
+    <fragment
+        android:id="@+id/notes"
+        android:name="android.andrespin.healthapp.ui.MainFragment"
+        tools:layout="@layout/main_fragment">
+        <action
+            android:id="@+id/action_notes_to_dialogAddNote"
+            app:destination="@id/dialogAddNote" />
+    </fragment>
+
+
+    <dialog
+        android:id="@+id/dialogAddNote"
+        android:name="android.andrespin.healthapp.ui.DialogAddNote"
+        android:label="DialogAddNote" >
+    </dialog>
+
+
+</navigation>

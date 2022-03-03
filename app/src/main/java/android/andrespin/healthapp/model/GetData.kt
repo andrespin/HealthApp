@@ -1,6 +1,5 @@
 package android.andrespin.healthapp.model
 
-import android.andrespin.healthapp.MainState
 import android.andrespin.healthapp.R
 
 class GetData {
@@ -9,17 +8,17 @@ class GetData {
         NoteData(
             "17:55",
             "",
-            123,
-            76,
-            56,
+            "123",
+            "76",
+            "56",
             R.drawable.back_note_item_data_yellow
         ),
         NoteData(
             "17:55",
             "",
-            123,
-            76,
-            56,
+            "123",
+            "76",
+            "56",
             R.drawable.back_note_item_data_yellow
         )
     )
@@ -38,8 +37,6 @@ class GetData {
     )
 
     fun getData() = list
-
-
 
 
 }

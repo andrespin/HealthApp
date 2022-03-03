@@ -1,4 +1,4 @@
-package android.andrespin.healthapp.ui
+package android.andrespin.healthapp.ui.adapter
 
 import android.andrespin.healthapp.databinding.ItemRvNoteDataBinding
 import android.andrespin.healthapp.model.NoteData
