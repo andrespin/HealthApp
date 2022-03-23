@@ -1,6 +1,7 @@
 package android.andrespin.healthapp.ui.adapter
 
 import android.andrespin.healthapp.databinding.ItemRvNoteDataBinding
+import android.andrespin.healthapp.model.Note
 import android.andrespin.healthapp.model.NoteData
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 class DayNotesAdapter(private val context: Context): RecyclerView.Adapter<DayNotesViewHolder>() {
 
 
-    private var data: List<NoteData> = arrayListOf()
+    private var data: List<Note> = arrayListOf()
 
-    fun setData(data: List<NoteData>) {
+    fun setData(data: List<Note>) {
         this.data = data
         notifyDataSetChanged()
     }

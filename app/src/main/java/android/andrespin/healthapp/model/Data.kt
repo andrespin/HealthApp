@@ -4,8 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class NoteData(
-    val time: String?,
     val date: String?,
+    val time: String?,
     val upperPressure: String?,
     val lowerPressure: String?,
     val pulse: String?,
@@ -18,8 +18,7 @@ data class NoteData(
         parcel.readString(),
         parcel.readString(),
         parcel.readValue(Int::class.java.classLoader) as? Int
-    ) {
-    }
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(time)
@@ -45,7 +44,18 @@ data class NoteData(
     }
 }
 
+data class Date(var number: Int, var mounth: Int, var year: Int)
+
 data class DayNotes(
-    val date: String,
-    val notes: List<NoteData>? = null
+    val date: Date,
+    val notes: List<Note>
+)
+
+data class Note(
+    val time: String?,
+    val date: String?,
+    val upperPressure: String?,
+    val lowerPressure: String?,
+    val pulse: String?,
+    val background: Int?
 )

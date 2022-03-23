@@ -10,16 +10,26 @@ import android.andrespin.healthapp.ui.adapter.DatesAdapter
 import android.andrespin.healthapp.viewmodel.MainViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
+@AndroidEntryPoint
 class MainFragment : Fragment() {
 
     private lateinit var binding: MainFragmentBinding
@@ -27,6 +37,12 @@ class MainFragment : Fragment() {
     private val adapter: DatesAdapter by lazy { DatesAdapter(requireContext()) }
 
     private lateinit var viewModel: MainViewModel
+
+//    private val viewModel by viewModels<MainViewModel>()
+//
+//    // private val viewModel by viewModels<ProfileViewModel>()
+//
+//    // private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,11 +66,13 @@ class MainFragment : Fragment() {
                 viewLifecycleOwner
             ) {
                 println("data of note $it")
+
+                // Вопрос тут:
                 lifecycleScope.launch {
                     viewModel.intent.send(MainIntent.SaveData(it))
+                    viewModel.intent.send(MainIntent.DisplayNotes)
                 }
             }
-
     }
 
     private fun initAdapter() {
@@ -71,7 +89,7 @@ class MainFragment : Fragment() {
                 }
                 R.id.menuSample -> {
                     lifecycleScope.launch {
-                        viewModel.intent.send(MainIntent.AddNote)
+                        viewModel.intent.send(MainIntent.DeleteAllNotes)
                     }
                     true
                 }
@@ -96,7 +114,6 @@ class MainFragment : Fragment() {
                         renderError(it)
                     }
                 }
-
             }
         }
 
