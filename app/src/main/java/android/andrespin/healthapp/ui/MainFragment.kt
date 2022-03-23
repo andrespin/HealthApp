@@ -60,6 +60,7 @@ class MainFragment : Fragment() {
         initToolBar()
         observeViewModel()
 
+
         val navController = findNavController()
         navController.currentBackStackEntry?.savedStateHandle?.getLiveData<NoteData>("key")
             ?.observe(
@@ -89,7 +90,7 @@ class MainFragment : Fragment() {
                 }
                 R.id.menuSample -> {
                     lifecycleScope.launch {
-                        viewModel.intent.send(MainIntent.DeleteAllNotes)
+                        viewModel.intent.send(MainIntent.DisplayNotes)
                     }
                     true
                 }
@@ -137,6 +138,7 @@ class MainFragment : Fragment() {
     }
 
     private fun renderData(it: MainState.Data) {
+        println("renderData $it")
         adapter.setData(it.data)
     }
 

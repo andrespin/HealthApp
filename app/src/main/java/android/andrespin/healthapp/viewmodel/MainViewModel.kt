@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -45,7 +46,10 @@ class MainViewModel
     }
 
     init {
-        downloadNotesFromDatabase()
+        runBlocking {
+            downloadNotesFromDatabase()
+        }
+        displayNotes()
         handleIntent()
     }
 
@@ -80,7 +84,6 @@ class MainViewModel
     private fun displayNotes() {
         viewModelScope.launch {
             setStateValue(MainState.Loading)
-
             println("savedNotes.size ${savedNotes.size}")
             if (savedNotes.size >= 1) {
                 val convertedToNote = provideConverter.convertToNote(savedNotes)
