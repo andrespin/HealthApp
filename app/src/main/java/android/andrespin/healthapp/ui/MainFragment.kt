@@ -1,6 +1,5 @@
 package android.andrespin.healthapp.ui
 
-import android.andrespin.healthapp.EventState
 import android.andrespin.healthapp.MainIntent
 import android.andrespin.healthapp.MainState
 import android.andrespin.healthapp.R
@@ -10,7 +9,6 @@ import android.andrespin.healthapp.ui.adapter.DatesAdapter
 import android.andrespin.healthapp.viewmodel.MainViewModel
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,13 +18,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import okhttp3.Dispatcher
 
 @AndroidEntryPoint
@@ -34,15 +29,9 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: MainFragmentBinding
 
-    private val adapter: DatesAdapter by lazy { DatesAdapter(requireContext()) }
+    private val adapter: DatesAdapter by lazy { DatesAdapter(requireContext(), this, viewModel) }
 
     private lateinit var viewModel: MainViewModel
-
-//    private val viewModel by viewModels<MainViewModel>()
-//
-//    // private val viewModel by viewModels<ProfileViewModel>()
-//
-//    // private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,20 +49,17 @@ class MainFragment : Fragment() {
         initToolBar()
         observeViewModel()
 
-
         val navController = findNavController()
         navController.currentBackStackEntry?.savedStateHandle?.getLiveData<NoteData>("key")
             ?.observe(
                 viewLifecycleOwner
             ) {
                 println("data of note $it")
-
-                // Вопрос тут:
                 lifecycleScope.launch {
-                    viewModel.intent.send(MainIntent.SaveData(it))
-                    viewModel.intent.send(MainIntent.DisplayNotes)
+                    viewModel.intent.send(MainIntent.SaveAndDisplay(it))
                 }
             }
+
     }
 
     private fun initAdapter() {
@@ -89,9 +75,7 @@ class MainFragment : Fragment() {
                     true
                 }
                 R.id.menuSample -> {
-                    lifecycleScope.launch {
-                        viewModel.intent.send(MainIntent.DisplayNotes)
-                    }
+
                     true
                 }
                 else -> false
@@ -117,20 +101,6 @@ class MainFragment : Fragment() {
                 }
             }
         }
-
-        lifecycleScope.launch {
-            viewModel.eventState.collect {
-                when (it) {
-                    is EventState.Idle -> {
-                    }
-                    is EventState.OpenDialog -> {
-                        findNavController().navigate(R.id.action_notes_to_dialogAddNote)
-                    }
-                }
-
-            }
-        }
-
     }
 
     private fun renderError(it: MainState.Error) {
@@ -138,7 +108,6 @@ class MainFragment : Fragment() {
     }
 
     private fun renderData(it: MainState.Data) {
-        println("renderData $it")
         adapter.setData(it.data)
     }
 
@@ -147,3 +116,26 @@ class MainFragment : Fragment() {
     }
 
 }
+
+
+//lifecycleScope.launch {
+//    coroutineScope {
+//        val j1 = launch(start = CoroutineStart.LAZY) {
+//            for (i in 0 until 10) {
+//                delay(100)
+//                println(i)
+//            }
+//        }
+//
+//        val j2 = launch(start = CoroutineStart.LAZY) {
+//            for (i in 10 until 20) {
+//                delay(100)
+//                println(i)
+//            }
+//        }
+//
+//        j1.start()
+//        j1.join()
+//        j2.start()
+//    }
+//}

@@ -7,9 +7,13 @@ import android.andrespin.healthapp.model.database.NoteEntity
 import android.andrespin.healthapp.utils.*
 import java.lang.NumberFormatException
 
-
 fun main() {
-    println(parseDate("12.03.2022"))
+
+    var list1 = listOf(1, 2, 3)
+    val list2 = listOf(4, 5, 6)
+
+    list1 += list2
+    println(list1)
 }
 
 private fun parseDate(date: String): Date {
@@ -79,6 +83,7 @@ abstract class ConverterTools {
         for (i in list.indices) {
             data.add(
                 Note(
+                    list[i].number,
                     list[i].time,
                     list[i].date,
                     list[i].upperPressure,
@@ -90,6 +95,58 @@ abstract class ConverterTools {
         }
         return data
     }
+
+    protected fun toNoteEntity(note: Note) =
+        NoteEntity(
+            note.numberId,
+            note.time,
+            note.date,
+            note.upperPressure,
+            note.lowerPressure,
+            note.pulse
+        )
+
+    protected fun toNoteEntityList(dayNotes: DayNotes): List<NoteEntity> {
+        val list = mutableListOf<NoteEntity>()
+        for (i in 0 until dayNotes.notes.size) {
+            list.add(
+                NoteEntity(
+                    dayNotes.notes[i].numberId,
+                    dayNotes.notes[i].time,
+                    dayNotes.notes[i].date,
+                    dayNotes.notes[i].upperPressure,
+                    dayNotes.notes[i].lowerPressure,
+                    dayNotes.notes[i].pulse
+                )
+            )
+        }
+        return list
+    }
+
+
+    /*
+
+        @PrimaryKey(autoGenerate = true)
+    var number: Int = 0,
+
+    val time: String?,
+
+    val date: String?,
+
+    val upperPressure: String?,
+
+    val lowerPressure: String?,
+
+    val pulse: String?
+
+        var numberId: Int = 0,
+    val time: String?,
+    val date: String?,
+    val upperPressure: String?,
+    val lowerPressure: String?,
+    val pulse: String?,
+    val background: Int?
+     */
 
     private fun sortAccordingDate(l: List<DayNotes>): List<DayNotes> {
         val list = l as MutableList<DayNotes>
@@ -113,18 +170,32 @@ abstract class ConverterTools {
 
     private fun putNoteListToSameDate(list: List<DayNotes>): List<DayNotes> {
         val l = mutableListOf<DayNotes>()
-        l.add(
-            DayNotes(
-                list[0].date,
-                list[0].notes
-            )
-        )
-        for (i in 1 until list.size) {
-            if (!isDateContained(l, list[i])) {
+        for (i in 0 until list.size) {
+            val data = checkIfContainsSameDateInList(l, list[i])
+            if (data.isSameDateInList) {
+                l[data.indexOfListWithSameDate].notes += list[i].notes
+            } else {
                 l.add(list[i])
             }
         }
+        println("lizt $l")
         return l
+    }
+
+    private data class SameDate(
+        val isSameDateInList: Boolean,
+        val indexOfListWithSameDate: Int = -1
+    )
+
+    private fun checkIfContainsSameDateInList(
+        listToCheck: List<DayNotes>,
+        dayNotes: DayNotes
+    ): SameDate {
+        if (listToCheck.isEmpty()) return SameDate(false)
+        for (i in listToCheck.indices) {
+            if (listToCheck[i].date == dayNotes.date) return SameDate(true, i)
+        }
+        return SameDate(false)
     }
 
     private fun getNoteBackgroundColor(data: NoteEntity): Int {
@@ -204,13 +275,4 @@ abstract class ConverterTools {
         }
         return false
     }
-
-    private fun isDateContained(listToCheck: List<DayNotes>, dayNotes: DayNotes): Boolean {
-        for (i in listToCheck.indices) {
-            if (listToCheck[i].date == dayNotes.date)
-                return true
-        }
-        return false
-    }
-
 }

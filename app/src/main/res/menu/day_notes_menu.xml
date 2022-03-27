@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/dayMenuDelete"
+        android:title="Удалить все записи за день" />
+
+    <item
+        android:id="@+id/dayMenuCancel"
+        android:title="Отмена" />
+</menu>

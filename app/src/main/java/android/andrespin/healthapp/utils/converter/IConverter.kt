@@ -10,4 +10,8 @@ interface IConverter {
 
     fun convertToNote(list: List<NoteEntity>): List<Note>
 
+    fun convertToNoteEntity(note: Note): NoteEntity
+
+    fun convertToNoteEntityList(dayNotes: DayNotes): List<NoteEntity>
+
 }

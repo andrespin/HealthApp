@@ -48,10 +48,11 @@ data class Date(var number: Int, var mounth: Int, var year: Int)
 
 data class DayNotes(
     val date: Date,
-    val notes: List<Note>
+    var notes: List<Note>
 )
 
 data class Note(
+    var numberId: Int = 0,
     val time: String?,
     val date: String?,
     val upperPressure: String?,
