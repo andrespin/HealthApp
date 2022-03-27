@@ -5,7 +5,4 @@
         android:id="@+id/menuAdd"
         android:title="Добавить запись" />
 
-    <item
-        android:id="@+id/menuSample"
-        android:title="Пример" />
 </menu>

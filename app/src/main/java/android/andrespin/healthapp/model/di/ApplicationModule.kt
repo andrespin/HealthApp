@@ -13,11 +13,6 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 class ApplicationModule() {
 
-    // https://svvashishtha.medium.com/using-room-with-hilt-cb57a1bc32f
-
-//    @Provides
-//    fun app(): App = App()
-
     @Provides
     internal fun provideConverter(): IConverter = Converter()
 

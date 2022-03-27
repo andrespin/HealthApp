@@ -1,6 +1,5 @@
 package android.andrespin.healthapp.model.di
 
-
 import android.andrespin.healthapp.model.database.Database
 import android.andrespin.healthapp.model.database.NoteDao
 import android.andrespin.healthapp.model.repository.IRepo

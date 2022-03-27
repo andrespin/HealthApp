@@ -7,58 +7,6 @@ import android.andrespin.healthapp.model.database.NoteEntity
 import android.andrespin.healthapp.utils.*
 import java.lang.NumberFormatException
 
-fun main() {
-
-    var list1 = listOf(1, 2, 3)
-    val list2 = listOf(4, 5, 6)
-
-    list1 += list2
-    println(list1)
-}
-
-private fun parseDate(date: String): Date {
-
-    val array = date.toCharArray()
-    var number = ""
-    var mounth = ""
-    var year = ""
-
-    for (i in array.indices) {
-        try {
-
-            when (array[i].toString().toInt()) {
-                in 0..9 -> {
-                    if (number.length < 2) {
-                        number += array[i]
-                    } else if (number.length == 2 && mounth.length < 2) {
-                        mounth += array[i]
-                    } else if (number.length == 2 && mounth.length >= 2) {
-                        year += array[i]
-                    }
-                }
-            }
-        } catch (e: NumberFormatException) {
-            if (array[i] in 'а'..'я' || array[i] in 'А'..'Я') {
-                mounth += array[i]
-            }
-        }
-    }
-
-    number.replace(" ", "")
-    year.replace(" ", "")
-    mounth.replace(" ", "")
-    val n = number.toInt()
-    val y = year.toInt()
-    var m = 0
-    m = try {
-        mounth.toInt()
-    } catch (e: NumberFormatException) {
-        mapRussianMonths[mounth]!!
-    }
-    return Date(n, m, y)
-}
-
-
 abstract class ConverterTools {
 
     protected fun toDayNotes(list: List<Note>): List<DayNotes> {
@@ -123,31 +71,6 @@ abstract class ConverterTools {
         return list
     }
 
-
-    /*
-
-        @PrimaryKey(autoGenerate = true)
-    var number: Int = 0,
-
-    val time: String?,
-
-    val date: String?,
-
-    val upperPressure: String?,
-
-    val lowerPressure: String?,
-
-    val pulse: String?
-
-        var numberId: Int = 0,
-    val time: String?,
-    val date: String?,
-    val upperPressure: String?,
-    val lowerPressure: String?,
-    val pulse: String?,
-    val background: Int?
-     */
-
     private fun sortAccordingDate(l: List<DayNotes>): List<DayNotes> {
         val list = l as MutableList<DayNotes>
         val n = list.size
@@ -178,7 +101,6 @@ abstract class ConverterTools {
                 l.add(list[i])
             }
         }
-        println("lizt $l")
         return l
     }
 
@@ -199,20 +121,17 @@ abstract class ConverterTools {
     }
 
     private fun getNoteBackgroundColor(data: NoteEntity): Int {
-        println("data.lowerPressure $data.lowerPressure")
-        println("data.upperPressure $data.upperPressure")
-
         val lowerPressure = data.lowerPressure!!.toInt()
         val upperPressure = data.upperPressure!!.toInt()
-        return if (lowerPressure < 60 && upperPressure < 100) {
+        return if (lowerPressure < 60 || upperPressure < 100) {
             blueColorBackground
-        } else if (lowerPressure in 60..79 && upperPressure in 100..119) {
+        } else if (lowerPressure in 60..79 || upperPressure in 100..119) {
             greenColorBackground
-        } else if (lowerPressure in 80..84 && upperPressure in 120..129) {
+        } else if (lowerPressure in 80..84 || upperPressure in 120..129) {
             lightGreenColorBackground
-        } else if (lowerPressure in 85..89 && upperPressure in 130..139) {
+        } else if (lowerPressure in 85..89 || upperPressure in 130..139) {
             yellowColorBackground
-        } else if (lowerPressure > 90 && upperPressure > 140) {
+        } else if (lowerPressure > 90 || upperPressure > 140) {
             redColorBackground
         } else {
             whiteColorBackground
